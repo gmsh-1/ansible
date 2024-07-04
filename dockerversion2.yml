@@ -4,7 +4,7 @@
     - name: Check docker-compose installation play
       hosts: localhost
   tasks:
-    - name: Check is dokcer-compose installed
+    - name: Check is docker-compose installed
       shell: command -v docker-compose >/dev/null 2>&1
       register: is_docker_compose_install
       ignore_errors: yes
