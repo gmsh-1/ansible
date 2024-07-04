@@ -3,16 +3,16 @@
   tasks:
     - name: Check docker-compose installation play
       hosts: localhost
-      tasks:
-      - name: Check is dokcer-compose installed
-        shell: command -v docker-compose >/dev/null 2>&1
-        register: is_docker_compose_install
-        ignore_errors: yes
-      - debug: msg="{{ is_docker_compose_install.rc }}" # it returns rc 1
-      - debug: var=is_docker_compose_install
-      - name: Run only if compose is installed
-        shell: command docker-compose --version
-        register: print_version
-        ignore_errors: yes
-        when: is_docker_compose_install.rc == 0
-      - debug: msg="{{ print_version.stdout }}"
+  tasks:
+    - name: Check is dokcer-compose installed
+      shell: command -v docker-compose >/dev/null 2>&1
+      register: is_docker_compose_install
+      ignore_errors: yes
+    - debug: msg="{{ is_docker_compose_install.rc }}" # it returns rc 1
+    - debug: var=is_docker_compose_install
+    - name: Run only if compose is installed
+      shell: command docker-compose --version
+      register: print_version
+      ignore_errors: yes
+      when: is_docker_compose_install.rc == 0
+    - debug: msg="{{ print_version.stdout }}"
