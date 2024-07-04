@@ -1,0 +1,6 @@
+- hosts: all
+  tasks:
+    - name: docker server version
+      shell: "docker version --format '{{ '{{' }}.Server.Version{{ '}}' }}'" 
+      register: docker_server_version
+      changed_when: False
