@@ -1,4 +1,4 @@
-- name: Check disk space and write to CSV
+- name: Check disk space
   hosts: all
   become: true
 
@@ -29,22 +29,7 @@
           debug:
             msg: "{{ ubuntu_disk_space.stdout_lines }}"
           when: is_ubuntu | bool
-        - name: Write disk space to CSV file on CentOS
-          when: is_centos | bool
-          local_action:
-            module: csv_writer
-            path: "{{ inventory_hostname }}-disk-space.csv"
-            headers: ['Filesystem', 'Type', 'Size', 'Used', 'Available', 'Use%', 'Mounted on']
-            content: "{{ centos_disk_space.stdout_lines[1:] }}"
-        - name: Write disk space to CSV file on Ubuntu
-          when: is_ubuntu | bool
-          local_action:
-            module: csv_writer
-            path: "{{ inventory_hostname }}-disk-space.csv"
-            headers: ['Filesystem', 'Type', 'Size', 'Used', 'Available', 'Use%', 'Mounted on']
-            content: "{{ ubuntu_disk_space.stdout_lines[1:] }}"
       when: "ansible_os_family == 'RedHat' or ansible_os_family == 'Debian'"
-
     - name: Check disk space on Windows
       block:
         - name: Check disk space on Windows
@@ -53,9 +38,4 @@
         - name: Print disk space on Windows
           debug:
             msg: "{{ windows_disk_space.stdout_lines }}"
-        - name: Write disk space to CSV file on Windows
-          local_action:
-            module: copy
-            content: "{{ windows_disk_space.stdout }}"
-            dest: "{{ inventory_hostname }}-disk-space.csv"
       when: ansible_os_family == 'Windows'
