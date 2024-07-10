@@ -27,9 +27,9 @@
 #    - name: Print firewall rules
 #      debug:
 #        msg: "{{ firewall_rules.stdout }}"
-    - name: Check for SELinux status
-      shell: sestatus
-      register: selinux_status
-    - name: Print SELinux status
-      debug:
-        msg: "{{ selinux_status.stdout }}"
+#    - name: Check for SELinux status
+#      shell: sestatus
+#      register: selinux_status
+#    - name: Print SELinux status
+#      debug:
+#        msg: "{{ selinux_status.stdout }}"
