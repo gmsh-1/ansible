@@ -2,7 +2,7 @@
 - hosts: all
   
   become: yes
-  become_method: root
+  become_user: root
   
   tasks:
     - name: update apt packages
