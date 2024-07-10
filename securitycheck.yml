@@ -1,7 +1,9 @@
 - name: Check security of Linux
   hosts: all
-  become: true
-
+  
+  become: yes
+  become_user: root
+  
   tasks:
     - name: Check for SSH root login
       shell: grep "PermitRootLogin" /etc/ssh/sshd_config | awk '{print $2}'
@@ -21,12 +23,12 @@
     - name: Print password policy
       debug:
         msg: "{{ password_policy.stdout }}"
-#    - name: Check for firewall rules
-#      shell: ufw status
-#      register: firewall_rules
-#    - name: Print firewall rules
-#      debug:
-#        msg: "{{ firewall_rules.stdout }}"
+    - name: Check for firewall rules
+      shell: ufw status
+      register: firewall_rules
+    - name: Print firewall rules
+      debug:
+        msg: "{{ firewall_rules.stdout }}"
 #    - name: Check for SELinux status
 #      shell: sestatus
 #      register: selinux_status
