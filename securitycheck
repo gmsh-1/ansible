@@ -1,0 +1,53 @@
+- name: Check security of Linux CentOS/Ubuntu
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Check for SSH root login
+      shell: grep "PermitRootLogin" /etc/ssh/sshd_config | awk '{print $2}'
+      register: ssh_root_login
+      when: ansible_distribution == 'CentOS' or ansible_distribution == 'Ubuntu'
+    - name: Print SSH root login status
+      debug:
+        msg: "SSH root login is {{ ssh_root_login.stdout }}"
+      when: ssh_root_login is defined
+    - name: Check for password authentication in SSH
+      shell: grep "PasswordAuthentication" /etc/ssh/sshd_config | awk '{print $2}'
+      register: ssh_password_auth
+      when: ansible_distribution == 'CentOS' or ansible_distribution == 'Ubuntu'
+    - name: Print SSH password authentication status
+      debug:
+        msg: "SSH password authentication is {{ ssh_password_auth.stdout }}"
+      when: ssh_password_auth is defined
+    - name: Check for password policy
+      shell: grep "PASS_MAX_DAYS\|PASS_MIN_DAYS\|PASS_WARN_AGE" /etc/login.defs
+      register: password_policy
+      when: ansible_distribution == 'CentOS' or ansible_distribution == 'Ubuntu'
+    - name: Print password policy
+      debug:
+        msg: "{{ password_policy.stdout }}"
+      when: password_policy is defined
+    - name: Check for firewall rules
+      shell: firewall-cmd --list-all
+      register: firewall_rules
+      when: ansible_distribution == 'CentOS'
+    - name: Print firewall rules
+      debug:
+        msg: "{{ firewall_rules.stdout }}"
+      when: firewall_rules is defined
+    - name: Check for UFW rules
+      shell: ufw status verbose
+      register: ufw_rules
+      when: ansible_distribution == 'Ubuntu'
+    - name: Print UFW rules
+      debug:
+        msg: "{{ ufw_rules.stdout }}"
+      when: ufw_rules is defined
+    - name: Check for SELinux status
+      shell: sestatus
+      register: selinux_status
+      when: ansible_distribution == 'CentOS'
+    - name: Print SELinux status
+      debug:
+        msg: "{{ selinux_status.stdout }}"
+      when: selinux_status is defined
