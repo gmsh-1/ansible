@@ -4,3 +4,4 @@
       command: docker --version
       register: docker_valid
       ignore_errors: yes
+    - debug: msg="{{ print_version.stdout }}"  
