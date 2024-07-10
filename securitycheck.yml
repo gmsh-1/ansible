@@ -21,12 +21,12 @@
     - name: Print password policy
       debug:
         msg: "{{ password_policy.stdout }}"
-#    - name: Check for firewall rules
-#      shell: firewall-cmd --list-all
-#      register: firewall_rules
-#    - name: Print firewall rules
-#      debug:
-#        msg: "{{ firewall_rules.stdout }}"
+    - name: Check for firewall rules
+      shell: ufw status
+      register: firewall_rules
+    - name: Print firewall rules
+      debug:
+        msg: "{{ firewall_rules.stdout }}"
 #    - name: Check for SELinux status
 #      shell: sestatus
 #      register: selinux_status
