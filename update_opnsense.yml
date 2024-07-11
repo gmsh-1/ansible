@@ -1,0 +1,22 @@
+---
+- name: Update OPNsense firewall
+  hosts: opnsense_firewalls
+  become: yes
+  tasks:
+    - name: Ensure the system is up to date
+      shell: opnsense-update -c && opnsense-update -U && opnsense-update -L && opnsense-update -l && opnsense-update -p
+
+    - name: Apply updates
+      shell: opnsense-update -i
+
+    - name: Reboot the firewall if needed
+      shell: |
+        if opnsense-update -i | grep -q 'Your system will be updated'; then
+          /usr/local/etc/rc.reboot
+        fi
+      args:
+        executable: /bin/sh
+
+    - name: Wait for the firewall to come back online
+      wait_for_connection:
+        timeout: 300
