@@ -1,0 +1,17 @@
+---
+- name: List all open firewall ports on Ubuntu
+  hosts: ubuntu_servers
+  become: yes
+  tasks:
+    - name: Ensure UFW is installed
+      apt:
+        name: ufw
+        state: present
+
+    - name: List open UFW ports
+      command: ufw status
+      register: ufw_status
+
+    - name: Display open UFW ports
+      debug:
+        msg: "{{ ufw_status.stdout }}"
