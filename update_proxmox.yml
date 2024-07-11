@@ -1,0 +1,21 @@
+---
+- name: Update Proxmox VE
+  hosts: proxmox_servers
+  become: yes
+  tasks:
+    - name: Ensure the Proxmox VE apt repository is up to date
+      apt:
+        update_cache: yes
+
+    - name: Upgrade all packages to the latest version
+      apt:
+        upgrade: dist
+
+    - name: Reboot the server if needed
+      reboot:
+        msg: "Reboot initiated by Ansible for Proxmox VE updates"
+        connect_timeout: 5
+        reboot_timeout: 600
+        pre_reboot_delay: 0
+        post_reboot_delay: 30
+        test_command: uptime
