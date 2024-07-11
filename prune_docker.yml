@@ -1,0 +1,20 @@
+---
+- name: Prune Docker
+  hosts: docker_servers
+  become: yes
+  tasks:
+    - name: Prune unused Docker objects
+      shell: docker system prune -af
+      register: prune_output
+
+    - name: Display prune result
+      debug:
+        msg: "{{ prune_output.stdout }}"
+
+- name: Prune unused Docker volumes
+  shell: docker volume prune -f
+  register: prune_volumes_output
+
+- name: Display volume prune result
+  debug:
+    msg: "{{ prune_volumes_output.stdout }}"
