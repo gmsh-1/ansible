@@ -1,0 +1,69 @@
+---
+- name: Perform security checks on Ubuntu
+  hosts: ubuntu_servers
+  become: yes
+  tasks:
+    - name: Ensure apt cache is updated
+      apt:
+        update_cache: yes
+
+    - name: Check for available package updates
+      apt:
+        upgrade: 'yes'
+      register: upgrade_result
+      changed_when: false
+
+    - name: Display available package updates
+      debug:
+        msg: "{{ upgrade_result.stdout }}"
+
+    - name: Ensure UFW is installed
+      apt:
+        name: ufw
+        state: present
+
+    - name: Check UFW status
+      command: ufw status
+      register: ufw_status
+      changed_when: false
+
+    - name: Display UFW status
+      debug:
+        msg: "{{ ufw_status.stdout }}"
+
+    - name: Check SSH configuration
+      command: cat /etc/ssh/sshd_config
+      register: sshd_config
+      changed_when: false
+
+    - name: Display SSH configuration
+      debug:
+        msg: "{{ sshd_config.stdout }}"
+
+    - name: Ensure auditd is installed
+      apt:
+        name: auditd
+        state: present
+
+    - name: Ensure fail2ban is installed
+      apt:
+        name: fail2ban
+        state: present
+
+    - name: Check auditd status
+      command: systemctl status auditd
+      register: auditd_status
+      changed_when: false
+
+    - name: Display auditd status
+      debug:
+        msg: "{{ auditd_status.stdout }}"
+
+    - name: Check fail2ban status
+      command: systemctl status fail2ban
+      register: fail2ban_status
+      changed_when: false
+
+    - name: Display fail2ban status
+      debug:
+        msg: "{{ fail2ban_status.stdout }}"
